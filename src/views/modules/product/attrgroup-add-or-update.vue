@@ -1,17 +1,9 @@
 <template>
-  <el-dialog
-    :title="!dataForm.id ? '新增' : '修改'"
-    :close-on-click-modal="false"
-    :visible.sync="visible"
-    @closed="dialogClose"
-  >
-    <el-form
-      :model="dataForm"
-      :rules="dataRule"
-      ref="dataForm"
-      @keyup.enter.native="dataFormSubmit()"
-      label-width="120px"
-    >
+  <el-dialog :title="!dataForm.attrGroupId ? '新增' : '修改'" :close-on-click-modal="false" :visible.sync="visible"
+    @closed="dialogClose">
+
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()"
+      label-width="120px">
       <el-form-item label="组名" prop="attrGroupName">
         <el-input v-model="dataForm.attrGroupName" placeholder="组名"></el-input>
       </el-form-item>
@@ -31,10 +23,12 @@
         <category-cascader :catelogPath.sync="catelogPath"></category-cascader>
       </el-form-item>
     </el-form>
+
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
       <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
     </span>
+
   </el-dialog>
 </template>
 
@@ -43,10 +37,10 @@ import CategoryCascader from '../common/category-cascader'
 export default {
   data() {
     return {
-      props:{
-        value:"catId",
-        label:"name",
-        children:"children"
+      props: {
+        value: "catId",
+        label: "name",
+        children: "children"
       },
       visible: false,
       categorys: [],
@@ -74,13 +68,13 @@ export default {
       }
     };
   },
-  components:{CategoryCascader},
-  
+  components: { CategoryCascader },
+
   methods: {
-    dialogClose(){
+    dialogClose() {
       this.catelogPath = [];
     },
-    getCategorys(){
+    getCategorys() {
       this.$http({
         url: this.$http.adornUrl("/product/category/list/tree"),
         method: "get"
@@ -108,7 +102,7 @@ export default {
               this.dataForm.icon = data.attrGroup.icon;
               this.dataForm.catelogId = data.attrGroup.catelogId;
               //查出catelogId的完整路径
-              this.catelogPath =  data.attrGroup.catelogPath;
+              this.catelogPath = data.attrGroup.catelogPath;
             }
           });
         }
@@ -120,8 +114,7 @@ export default {
         if (valid) {
           this.$http({
             url: this.$http.adornUrl(
-              `/product/attrgroup/${
-                !this.dataForm.attrGroupId ? "save" : "update"
+              `/product/attrgroup/${!this.dataForm.attrGroupId ? "save" : "update"
               }`
             ),
             method: "post",
@@ -131,7 +124,7 @@ export default {
               sort: this.dataForm.sort,
               descript: this.dataForm.descript,
               icon: this.dataForm.icon,
-              catelogId: this.catelogPath[this.catelogPath.length-1]
+              catelogId: this.catelogPath[this.catelogPath.length - 1]
             })
           }).then(({ data }) => {
             if (data && data.code === 0) {
@@ -152,7 +145,7 @@ export default {
       });
     }
   },
-  created(){
+  created() {
     this.getCategorys();
   }
 };

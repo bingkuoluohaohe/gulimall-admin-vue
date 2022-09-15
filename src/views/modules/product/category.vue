@@ -3,6 +3,7 @@
     <el-switch v-model="draggable" active-text="开启拖拽" inactive-text="关闭拖拽"></el-switch>
     <el-button v-if="draggable" @click="batchSave">批量保存</el-button>
     <el-button type="danger" @click="batchDelete">批量删除</el-button>
+
     <el-tree :data="menus" :props="defaultProps" :expand-on-click-node="false" show-checkbox node-key="catId"
       :default-expanded-keys="expandedKey" :draggable="draggable" :allow-drop="allowDrop" @node-drop="handleDrop"
       ref="menuTree">
@@ -72,13 +73,13 @@ export default {
       }
     };
   },
-
   //计算属性 类似于data概念
   computed: {},
   //监控data中的数据变化
   watch: {},
   //方法集合
   methods: {
+    // 获取三级分类菜单
     getMenus() {
       this.$http({
         url: this.$http.adornUrl("/product/category/list/tree"),
@@ -88,6 +89,7 @@ export default {
         this.menus = data.data;
       });
     },
+    // 批量删除
     batchDelete() {
       let catIds = [];
       let checkedNodes = this.$refs.menuTree.getCheckedNodes();
@@ -115,6 +117,7 @@ export default {
         })
         .catch(() => { });
     },
+    // 批量保存
     batchSave() {
       this.$http({
         url: this.$http.adornUrl("/product/category/update/sort"),
@@ -134,6 +137,7 @@ export default {
         // this.pCid = 0;
       });
     },
+    // 处理拖拽
     handleDrop(draggingNode, dropNode, dropType, ev) {
       console.log("handleDrop: ", draggingNode, dropNode, dropType);
       //1、当前节点最新的父节点id
@@ -176,6 +180,7 @@ export default {
       //3、当前拖拽节点的最新层级
       console.log("updateNodes", this.updateNodes);
     },
+    // 更新子节点层级
     updateChildNodeLevel(node) {
       if (node.childNodes.length > 0) {
         for (let i = 0; i < node.childNodes.length; i++) {
@@ -188,6 +193,7 @@ export default {
         }
       }
     },
+    // 允许拖拽条件
     allowDrop(draggingNode, dropNode, type) {
       //1、被拖动的当前节点以及所在的父节点总层数不能大于3
 
@@ -209,6 +215,7 @@ export default {
         return deep + dropNode.parent.level <= 3;
       }
     },
+    // 统计节点层级
     countNodeLevel(node) {
       //找到所有子节点，求出最大深度
       if (node.childNodes != null && node.childNodes.length > 0) {
@@ -220,6 +227,7 @@ export default {
         }
       }
     },
+    // 编辑
     edit(data) {
       console.log("要修改的数据", data);
       this.dialogType = "edit";
@@ -249,6 +257,7 @@ export default {
          */
       });
     },
+    // 新增
     append(data) {
       console.log("append", data);
       this.dialogType = "add";
@@ -263,7 +272,7 @@ export default {
       this.category.sort = 0;
       this.category.showStatus = 1;
     },
-
+    // 提交表单
     submitData() {
       if (this.dialogType == "add") {
         this.addCategory();
@@ -312,7 +321,7 @@ export default {
         this.expandedKey = [this.category.parentCid];
       });
     },
-
+    // 删除
     remove(node, data) {
       var ids = [data.catId];
       this.$confirm(`是否删除【${data.name}】菜单?`, "提示", {
@@ -341,14 +350,14 @@ export default {
       console.log("remove", node, data);
     }
   },
+  beforeCreate() { }, //生命周期 - 创建之前
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.getMenus();
   },
+  beforeMount() { }, //生命周期 - 挂载之前
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() { },
-  beforeCreate() { }, //生命周期 - 创建之前
-  beforeMount() { }, //生命周期 - 挂载之前
   beforeUpdate() { }, //生命周期 - 更新之前
   updated() { }, //生命周期 - 更新之后
   beforeDestroy() { }, //生命周期 - 销毁之前
@@ -357,4 +366,5 @@ export default {
 };
 </script>
 <style scoped>
+
 </style>

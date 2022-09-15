@@ -11,6 +11,7 @@
           :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
+
     <el-table :data="dataList" border v-loading="dataListLoading" @selection-change="selectionChangeHandle"
       style="width: 100%;">
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
@@ -42,12 +43,16 @@
         </template>
       </el-table-column>
     </el-table>
+
     <el-pagination @size-change="sizeChangeHandle" @current-change="currentChangeHandle" :current-page="pageIndex"
       :page-sizes="[10, 20, 50, 100]" :page-size="pageSize" :total="totalPage"
       layout="total, sizes, prev, pager, next, jumper"></el-pagination>
+
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+
     <el-dialog title="关联分类" :visible.sync="cateRelationDialogVisible" width="30%">
+     
       <el-popover placement="right-end" v-model="popCatelogSelectVisible">
         <category-cascader :catelogPath.sync="catelogPath"></category-cascader>
         <div style="text-align: right; margin: 0">
@@ -56,6 +61,7 @@
         </div>
         <el-button slot="reference">新增关联</el-button>
       </el-popover>
+
       <el-table :data="cateRelationTableData" style="width: 100%">
         <el-table-column prop="id" label="#"></el-table-column>
         <el-table-column prop="brandName" label="品牌名"></el-table-column>
@@ -67,11 +73,14 @@
           </template>
         </el-table-column>
       </el-table>
+
       <span slot="footer" class="dialog-footer">
         <el-button @click="cateRelationDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="cateRelationDialogVisible = false">确 定</el-button>
       </span>
+
     </el-dialog>
+
   </div>
 </template>
 
@@ -164,12 +173,13 @@ export default {
         this.dataListLoading = false;
       });
     },
+    // 更改显示状态
     updateBrandStatus(data) {
       console.log("最新信息", data);
       let { brandId, showStatus } = data;
       //发送请求修改状态
       this.$http({
-        url: this.$http.adornUrl("/product/brand/update"),
+        url: this.$http.adornUrl("/product/brand/update/status"),
         method: "post",
         data: this.$http.adornData({ brandId, showStatus }, false)
       }).then(({ data }) => {

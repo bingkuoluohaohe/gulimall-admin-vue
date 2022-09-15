@@ -29,6 +29,11 @@
             <a href="https://www.codekenan.icu/" target="_blank">首页</a>
           </el-badge>
         </el-menu-item>
+        <el-submenu index="3">
+          <template slot="title">源码</template>
+          <el-menu-item index="2-1"><a href="https://gitee.com/bingkuoluohaohe/gulimall" target="_blank">后端</a></el-menu-item>
+          <el-menu-item index="2-2"><a href="https://gitee.com/bingkuoluohaohe/gulimall-admin-vue" target="_blank">前端</a></el-menu-item>
+        </el-submenu>
         <el-menu-item class="site-navbar__avatar" index="3">
           <el-dropdown :show-timeout="0" placement="bottom">
             <span class="el-dropdown-link">
